@@ -24,8 +24,8 @@ module Crystallite
 			
 			# @sector_points = []
 
-			@div_alpha = 2
-			@div_radius = 5
+			@div_alpha = 4
+			@div_radius = 4
 
 			@sector_alpha = PI / axes
 			
@@ -61,6 +61,7 @@ module Crystallite
 				point_acos point
 			end
 
+
 			p_debug
 
 			@new_points += reflect_points(@new_points, [1,0])
@@ -69,7 +70,10 @@ module Crystallite
 			p_debug
 
 			(@axes-1).times do |i|
-				angle = @sector_alpha + i*@sector_alpha
+				p i
+				angle = -@sector_alpha - 2*i*@sector_alpha
+
+				puts "angle/PI:#{angle/PI} cos:#{cos(angle)} sin:#{sin(angle)}"
 				@new_points = reflect_points(@new_points, [cos(angle), sin(angle)])
 				@points += @new_points
 			end
