@@ -36,9 +36,11 @@ module Crystallite
 			@sector_point_count /= axes
 			@sector_point_count /= 4
 
+
 			@flake_gene = flake_gene
 
-			generate_points
+			initial_flake_points
+			generate_flake_points
 		end
 
 		def generate
@@ -57,6 +59,10 @@ module Crystallite
 			puts ""
 			puts "@new_points: #{@new_points}"
 			puts ""
+		end
+
+		def generate_flake_points
+
 		end
 
 		def generate_points
@@ -115,6 +121,19 @@ module Crystallite
 		#
 		# Pointlist generators
 		#
+
+		def initial_flake_points
+			flake_gene.sector_points.each do |point|
+				point[0] *= flake_gene.div_radius
+				point[1] *= flake_gene.div_alpha
+
+				point[0] = point[0].round
+				point[1] = point[1].round
+
+				point[0] /= Float(flake_gene.div_radius)
+				point[1] /= Float(flake_gene.div_alpha)
+			end						
+		end
 
 		def initial_points
 			ret_points = []
