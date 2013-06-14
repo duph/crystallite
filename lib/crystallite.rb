@@ -6,8 +6,10 @@ require_relative 'crystallite/dna'
 
 size = 600
 
-f = Crystallite::Flake.new size, 30, 50, 2
 g = Crystallite::FlakeGene.new
+
+f = Crystallite::Flake.new size, 30, 50, 2, g
+puts g.code
 # p "sector points: #{f.sector_points}"
 
 svg = Crystallite::SVGGenerator.new size, size

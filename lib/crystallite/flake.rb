@@ -1,7 +1,5 @@
 require 'transformatrix'
 require_relative 'extenders'
-require_relative 'properties'
-
 
 module Crystallite
 	class Flake
@@ -17,7 +15,9 @@ module Crystallite
 		attr :sector_alpha
 		attr :sector_point_count
 
-		def initialize size, min_points, max_points, axes
+		attr :flake_gene
+
+		def initialize size, min_points, max_points, axes, flake_gene
 			@points = []
 			@size = size
 			@axes = axes
@@ -35,6 +35,8 @@ module Crystallite
 			@sector_point_count = rand(min_points..max_points)
 			@sector_point_count /= axes
 			@sector_point_count /= 4
+
+			@flake_gene = flake_gene
 
 			generate_points
 		end
