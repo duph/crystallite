@@ -1,4 +1,7 @@
 require 'transformatrix'
+require_relative 'extenders'
+require_relative 'properties'
+
 
 module Crystallite
 	class Flake
@@ -58,38 +61,32 @@ module Crystallite
 			@new_points = initial_points
 			
 			@new_points.sort_by! do |point|
-				point_acos point
+				-point_acos(point)
 			end
-
-
-			p_debug
 
 			@new_points += reflect_points(@new_points, [1,0])
 			@points += @new_points
 
-			p_debug
-
 			(@axes-1).times do |i|
-				p i
 				angle = -@sector_alpha - 2*i*@sector_alpha
 
-				puts "angle/PI:#{angle/PI} cos:#{cos(angle)} sin:#{sin(angle)}"
+				# puts "angle/PI:#{angle/PI} cos:#{cos(angle)} sin:#{sin(angle)}"
+
 				@new_points = reflect_points(@new_points, [cos(angle), sin(angle)])
 				@points += @new_points
 			end
 
-			p_debug
-
 			@points.each do |point|
 				point[0] += @size/2
 				point[1] += @size/2
+				point.swap! 0, 1
 			end
 		end
 
 
 		def sort_points!
 			@points.sort_by! do |p|
-				point_acos(p)
+				- point_acos(p)
 			end
 		end
 
@@ -100,15 +97,13 @@ module Crystallite
 
 		private
 
-		# Point modifiers
+		# Point evaluators
 
 		def point_acos point
-			# point[1] > 0 ? acos(point[0]/(size*2)) : 2*PI - acos(point[0]/(size*2))
-
 			ret = acos(point[0]/Vector[point[0],point[1]].r)
 			if ret < 0 then raise "Small" end
-			if ret > PI/2 then raise "Large" end
-			-ret
+			if ret > PI then raise "Large" end
+			ret
 		end
 
 		def point_radius point

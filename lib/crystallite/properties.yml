@@ -1,0 +1,10 @@
+Flake:
+  max_size: 300
+  min_size: 100
+
+  min_axes: 1
+  max_axes: 5
+
+  max_sector_points: 10
+  min_sector_points: 3
+
