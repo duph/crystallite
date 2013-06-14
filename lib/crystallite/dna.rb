@@ -26,15 +26,6 @@ module Crystallite
 			end
 		end
 
-		def to_s
-			str = '<' + self.class.to_s + ' '
-		    instance_variables.each do |var|
-
-				str += var.to_s + "=" + instance_variable_get(var).inspect + ' '
-			end
-			str += '>'
-		end
-
 	end
 
 	class Dna

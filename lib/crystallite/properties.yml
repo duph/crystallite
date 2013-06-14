@@ -1,16 +1,16 @@
 Flake:
-  min_size: 100
-  max_size: 300
+  min_size: 600
+  max_size: 600
 
   min_axes: 1
-  max_axes: 5
+  max_axes: 6
 
   min_div_alpha: 2
-  max_div_alpha: 10
+  max_div_alpha: 15
 
   min_div_radius: 2
-  max_div_radius: 10
+  max_div_radius: 20
 
-  min_sector_points: 2
-  max_sector_points: 10
+  min_sector_points: 5
+  max_sector_points: 100
 

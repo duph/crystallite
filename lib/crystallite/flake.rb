@@ -12,35 +12,31 @@ module Crystallite
 		attr :new_points
 
 		attr :div_alpha, :div_radius
-		attr :sector_alpha
+		attr :angle
 		attr :sector_point_count
 
 		attr :flake_gene
 
 		def initialize size, min_points, max_points, axes, flake_gene
 			@points = []
-			@size = size
-			@axes = axes
-
-			@min_points = min_points
-			@max_points = max_points
-			
-			# @sector_points = []
-
-			@div_alpha = 4
-			@div_radius = 4
-
-			@sector_alpha = PI / axes
-			
-			@sector_point_count = rand(min_points..max_points)
-			@sector_point_count /= axes
-			@sector_point_count /= 4
-
+			@sector_points = []
 
 			@flake_gene = flake_gene
+			p flake_gene
 
-			initial_flake_points
-			generate_flake_points
+			set_growth_vars
+
+			sector_points_parse
+			sector_points_fit_to_div
+			sector_points_sort
+			sector_points_scale
+
+			points_parse_cartesian
+			# points_sort
+			p points
+			points_replicate
+			p points
+			# generate_flake_points
 		end
 
 		def generate
@@ -54,49 +50,30 @@ module Crystallite
 				
 		end
 
-		def p_debug
-			puts "@points: #{@points}"
-			puts ""
-			puts "@new_points: #{@new_points}"
-			puts ""
-		end
-
-		def generate_flake_points
-
-		end
-
-		def generate_points
-			@new_points = initial_points
-			
-			@new_points.sort_by! do |point|
-				-point_acos(point)
+		def sector_points_sort
+			@sector_points.sort_by! do |point|
+				-point[1]
 			end
+		end
 
-			@new_points += reflect_points(@new_points, [1,0])
+		def points_replicate
+			@new_points = reflect_points(@points, [1,0])
 			@points += @new_points
+			@new_points = @points
 
-			(@axes-1).times do |i|
-				angle = -@sector_alpha - 2*i*@sector_alpha
-
-				# puts "angle/PI:#{angle/PI} cos:#{cos(angle)} sin:#{sin(angle)}"
-
-				@new_points = reflect_points(@new_points, [cos(angle), sin(angle)])
+			(@flake_gene.axes-1).times do |i|
+				reflect_angle = -@angle - 2*i*@angle
+				@new_points = reflect_points(@new_points, [cos(reflect_angle), sin(reflect_angle)])
 				@points += @new_points
 			end
 
 			@points.each do |point|
-				point[0] += @size/2
-				point[1] += @size/2
+				point[0] += @flake_gene.size/2
+				point[1] += @flake_gene.size/2
 				point.swap! 0, 1
 			end
 		end
 
-
-		def sort_points!
-			@points.sort_by! do |p|
-				- point_acos(p)
-			end
-		end
 
 		def points
 			@points
@@ -118,41 +95,53 @@ module Crystallite
 			Vector[point[0],point[1]].r
 		end
 
+
 		#
-		# Pointlist generators
+		# Growth
 		#
 
-		def initial_flake_points
-			flake_gene.sector_points.each do |point|
-				point[0] *= flake_gene.div_radius
-				point[1] *= flake_gene.div_alpha
+		def set_growth_vars
+			@angle = PI / @flake_gene.axes
+			@radius = @flake_gene.size / 2
+		end
+
+		def sector_points_parse
+			@flake_gene.sector_points.each do |point|
+				@sector_points.push point.dup
+			end
+		end
+
+		def sector_points_fit_to_div
+			@sector_points.each do |point|
+				point[0] *= @flake_gene.div_radius
+				point[1] *= @flake_gene.div_alpha
 
 				point[0] = point[0].round
 				point[1] = point[1].round
 
-				point[0] /= Float(flake_gene.div_radius)
-				point[1] /= Float(flake_gene.div_alpha)
-			end						
-		end
-
-		def initial_points
-			ret_points = []
-
-			sector_point_count.times do |i|
-				radius = @size / 2
-				radius /= rand(1..@div_radius)
-
-				alpha = sector_alpha / div_alpha * rand(0..@div_alpha)
-				
-				x = radius * cos(alpha) 
-				y = radius * sin(alpha)
-				
-				# p "alpha / PI: #{alpha / PI}, radius: #{radius}, point: [#{x}, #{y}]"
-
-				ret_points.push([x,y])
+				point[0] /= Float(@flake_gene.div_radius)
+				point[1] /= Float(@flake_gene.div_alpha)
 			end
-			ret_points
 		end
+
+		def sector_points_scale
+			@sector_points.each do |point|
+				point[0] *= @radius
+				point[1] *= @angle
+			end
+		end
+
+		def points_parse_cartesian
+			@sector_points.each do |point|
+				x = point[0] * cos(point[1])
+				y = point[0] * sin(point[1])
+				@points.push [x,y]
+			end
+		end
+
+		#
+		# Utilities
+		#
 
 		def reflect_points point_list, axis
 			ret_points = []
