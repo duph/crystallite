@@ -91,8 +91,6 @@ module Crystallite
 			end
 
 			@points.each do |point|
-				point[0] += @flake_gene.size/2
-				point[1] += @flake_gene.size/2
 				point.swap! 0, 1
 			end
 		end
