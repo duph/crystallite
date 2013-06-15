@@ -34,8 +34,6 @@ module Crystallite
 
 		def initialize
 			randomize
-			p @flake_gene_list
-			p @distance_list
 			self
 		end
 
