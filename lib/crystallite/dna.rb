@@ -28,22 +28,17 @@ module Crystallite
 
 	end
 
-	class Dna
-		attr :flake_genes
+	class CrystalGene
+		attr :flake_gene_list
+		attr :distance_list
 
 		def initialize
-			@genes = {
-				flakes: []
-				
-			}
-
+			randomize
+			self
 		end
 
 		def randomize
-
-		end
-
-		def mutate
+			
 		end
 	end
 end
