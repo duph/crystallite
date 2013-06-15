@@ -28,24 +28,36 @@ module Crystallite
 		def grow_crystal
 			@polygon_list = []
 
-			(crystal_gene.distance_list.length-1).times do |i|
-				i += 1
+			# copy center flake to points
+			@polygon_list += [flake_list[0].points.dup]
+
+			@crystal_gene.distance_list.length.times do |i|
 				# position flake to perimiter
-				new_points = flake_list[i].points.dup
+				new_points = flake_list[i+1].points.dup
 				new_points = move_points(new_points, [0, -crystal_gene.distance_list[i]])
 
 				# rotate flake around perimiter and copy to points
-				5.times do |i|
-					@polygon_list += [rotate_points(new_points, i*2*PI/5)]
+				@crystal_gene.axes.times do |i|
+					@polygon_list += [rotate_points(new_points, i*2*PI/@crystal_gene.axes)]
 				end
 			end
 		end
 
 		def move position
 			# TODO: test
-			polygon_list.each do |polygon|
-				polygon = move_points(polygon, position)
+			new_polygon_list = []
+			@polygon_list.each do |polygon|
+				new_polygon_list.push move_points(polygon, position)
 			end
+			@polygon_list = new_polygon_list
+		end
+
+		def scale scalar
+			new_polygon_list = []
+			@polygon_list.each do |polygon|
+				new_polygon_list.push scale_points(polygon, position)
+			end
+			@polygon_list = new_polygon_list
 		end
 	end
 end

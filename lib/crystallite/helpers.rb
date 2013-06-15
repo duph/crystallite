@@ -24,5 +24,13 @@ module Crystallite
 			end
 			ret_points
 		end
+
+		def scale_points point_list, scalar
+			ret_points = []
+			point_list.each do |point|
+				ret_points.push (TMatrix.scaling(scalar) * point)
+			end
+			ret_points
+		end
 	end
 end

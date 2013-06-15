@@ -4,7 +4,7 @@ require_relative 'properties'
 module Crystallite
 	class FlakeGene
 		attr :size
-		attr :axes
+		attr_accessor :axes
 		attr :div_alpha
 		attr :div_radius
 		attr :sector_points
@@ -31,6 +31,7 @@ module Crystallite
 	class CrystalGene
 		attr :flake_gene_list
 		attr :distance_list
+		attr :axes
 
 		def initialize
 			randomize
@@ -42,11 +43,15 @@ module Crystallite
 			Properties.Crystal.flake_gene_count.times do
 				@flake_gene_list.push FlakeGene.new
 			end
+			@flake_gene_list[0].axes = Properties.Crystal.axes
 
 			@distance_list = []
 			(Properties.Crystal.flake_gene_count-1).times do
 				@distance_list.push rand(Properties.Crystal.min_distance..Properties.Crystal.max_distance)
 			end
+			@distance_list.sort!
+
+			@axes = Properties.Crystal.axes
 		end
 
 		def each_flake_gene
