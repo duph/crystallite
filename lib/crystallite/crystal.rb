@@ -1,23 +1,24 @@
+require_relative 'flake'
 
 module Crystallite
-	class Edge
-		attr_accessor :length
-	end
-
-	class Node
-		attr_accessor :edge_list
-	end
-
 	class Crystal
-		attr :root
+		attr :crystal_gene
 
-		attr :base_flakes
+		attr :flake_list
 
-		attr :flakes
+		def initialize crystal_gene
+			@crystal_gene = crystal_gene
+			@flake_list = []
 
-
-		def initialize dna
-
+			grow_flakes
 		end
+
+		def grow_flakes
+			@crystal_gene.each_flake_gene do |c_g|
+				@flake_list.push Crystallite::Flake.new(c_g)
+			end
+		end
+
+		
 	end
 end

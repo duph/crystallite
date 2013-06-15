@@ -34,11 +34,27 @@ module Crystallite
 
 		def initialize
 			randomize
+			p @flake_gene_list
+			p @distance_list
 			self
 		end
 
 		def randomize
-			
+			@flake_gene_list = []
+			Properties.Crystal.flake_gene_count.times do
+				@flake_gene_list.push FlakeGene.new
+			end
+
+			@distance_list = []
+			(Properties.Crystal.flake_gene_count-1).times do
+				@distance_list.push rand(Properties.Crystal.min_distance..Properties.Crystal.max_distance)
+			end
+		end
+
+		def each_flake_gene
+			@flake_gene_list.each do |f_g|
+				yield f_g
+			end
 		end
 	end
 end

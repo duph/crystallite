@@ -1,5 +1,5 @@
 Flake:
-  min_size: 600
+  min_size: 200
   max_size: 600
 
   min_axes: 1
@@ -14,3 +14,8 @@ Flake:
   min_sector_points: 5
   max_sector_points: 100
 
+Crystal:
+  flake_gene_count: 4
+
+  min_distance: 50
+  max_distance: 200
